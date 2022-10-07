@@ -17,6 +17,8 @@ melspectrogram = LogMelSpectrogram()
 
 def process_wav(in_path, out_path):
     wav, sr = torchaudio.load(in_path)
+    if wav.shape[0] != 1:
+        wav = torch.mean(wav, dim=0)
     wav = resample(wav, sr, 16000)
 
     logmel = melspectrogram(wav.unsqueeze(0))
