@@ -127,8 +127,8 @@ class MelDatasetS3(Dataset):
         mel_path = self.metadata_mels[index]
         units_path = self.metadata_units[index]
 
-        mel = np.load(mel_path).T
-        units = np.load(units_path)
+        mel = np.load(s3_file_system.open(mel_path)).T
+        units = np.load(s3_file_system.open(units_path))
 
         length = 2 * units.shape[0]
 
