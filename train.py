@@ -298,13 +298,11 @@ if __name__ == "__main__":
         "--resume",
         help="path to the checkpoint to resume from.",
         type=Path,
-        required=False,
     )
     parser.add_argument(
         "--discrete",
         action="store_true",
         help="use discrete units.",
-        required=False,
     )
     args = parser.parse_args()
 
