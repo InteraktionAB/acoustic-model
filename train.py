@@ -283,22 +283,28 @@ if __name__ == "__main__":
         metavar="dataset-dir",
         help="path to the data directory.",
         type=Path,
+        required=False,
+        default="."
     )
     parser.add_argument(
         "checkpoint_dir",
         metavar="checkpoint-dir",
         help="path to the checkpoint directory.",
         type=Path,
+        required=False,
+        default="checkpoints"
     )
     parser.add_argument(
         "--resume",
         help="path to the checkpoint to resume from.",
         type=Path,
+        required=False,
     )
     parser.add_argument(
         "--discrete",
         action="store_true",
         help="use discrete units.",
+        required=False,
     )
     args = parser.parse_args()
 
