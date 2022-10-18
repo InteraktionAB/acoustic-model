@@ -279,13 +279,13 @@ def train(rank, world_size, args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the acoustic model.")
     parser.add_argument(
-        "dataset_dir",
+        "--dataset_dir",
         metavar="dataset-dir",
         help="path to the data directory.",
         type=Path,
     )
     parser.add_argument(
-        "checkpoint_dir",
+        "--checkpoint_dir",
         metavar="checkpoint-dir",
         help="path to the checkpoint directory.",
         type=Path,
