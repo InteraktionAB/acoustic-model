@@ -13,6 +13,7 @@ from torch.nn.utils.rnn import pad_sequence
 
 class MelDataset(Dataset):
     def __init__(self, root: Path, train: bool = True, discrete: bool = False):
+        root: Path = Path(os.environ["SM_CHANNEL_TRAINING"])
         self.discrete = discrete
         self.mels_dir = root / "mels"
         self.units_dir = root / "discrete" if discrete else root / "soft"
