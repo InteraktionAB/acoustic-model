@@ -1,8 +1,8 @@
 import argparse
 import logging
-import os
 from pathlib import Path
 
+import s3fs
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 # Define hyperparameters for training:
 ########################################################################################
 
-BATCH_SIZE = 64
+BATCH_SIZE = 8
 LEARNING_RATE = 4e-4
 BETAS = (0.8, 0.99)
 WEIGHT_DECAY = 1e-5
@@ -85,10 +85,12 @@ def train(rank, world_size, args):
     # Initialize datasets and dataloaders
     ####################################################################################
 
+    s3fs: s3fs.core.S3FileSystem = s3fs.core.S3FileSystem() 
+
     train_dataset = MelDataset(
-        root=args.dataset_dir,
-        train=True,
-        discrete=args.discrete,
+        uri=args.uri,
+        pattern="train/*.npy",
+        s3fs=s3fs,
     )
     train_sampler = DistributedSampler(train_dataset, drop_last=True)
     train_loader = DataLoader(
@@ -103,8 +105,9 @@ def train(rank, world_size, args):
     )
 
     validation_dataset = MelDataset(
-        root=args.dataset_dir,
-        train=False,
+        uri=args.uri,
+        pattern="train/*.npy",
+        s3fs=s3fs
     )
     validation_loader = DataLoader(
         validation_dataset,
@@ -280,19 +283,15 @@ def train(rank, world_size, args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the acoustic model.")
     parser.add_argument(
-        "--dataset_dir",
-        metavar="dataset-dir",
-        help="path to the data directory.",
+        "uri",
+        metavar="uri",
+        help="URL of the bucket.",
         type=Path,
-        required=False,
-        default=Path(os.environ["SM_CHANNEL_TRAIN"])
     )
     parser.add_argument(
-        "--checkpoint_dir",
+        "checkpoint_dir",
         metavar="checkpoint-dir",
         help="path to the checkpoint directory.",
-        required=False,
-        default=Path(os.environ["SM_MODEL_DIR"])
         type=Path,
     )
     parser.add_argument(
@@ -300,11 +299,7 @@ if __name__ == "__main__":
         help="path to the checkpoint to resume from.",
         type=Path,
     )
-    parser.add_argument(
-        "--discrete",
-        action="store_true",
-        help="use discrete units.",
-    )
+    
     args = parser.parse_args()
 
     world_size = torch.cuda.device_count()
