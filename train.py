@@ -278,9 +278,8 @@ def train(rank, world_size, args):
 
 
 if __name__ == "__main__":
-    print(os.listdir(os.environ["SM_CHANNEL_TRAINING"] + "/mels/train"))
-    print([path for path in (Path(os.environ["SM_CHANNEL_TRAINING"])/"mels").rglob("train/**/*.py")])
-    print([path for path in (Path(os.environ["SM_CHANNEL_TRAINING"])/"mels").rglob("train/*.py")])
+    print(os.listdir(os.environ["SM_CHANNEL_TRAINING"]))
+    print(os.listdir(os.environ["SM_CHANNEL_TRAINING"] + "/data"))
     parser = argparse.ArgumentParser(description="Train the acoustic model.")
     parser.add_argument(
         "--dataset_dir",
