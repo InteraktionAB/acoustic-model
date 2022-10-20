@@ -17,10 +17,10 @@ class MelDataset(Dataset):
         self.mels_dir = root / "mels"
         self.units_dir = root / "discrete" if discrete else root / "soft"
 
-        pattern = "train/**/*.npy" if train else "dev/**/*.npy"
+        pattern = "train/*.npy" if train else "dev/*.npy"
         self.metadata = [
             path.relative_to(self.mels_dir).with_suffix("")
-            for path in self.mels_dir.rglob(pattern)
+            for path in self.mels_dir.glob(pattern)
         ]
 
     def __len__(self):
