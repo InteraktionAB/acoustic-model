@@ -292,7 +292,7 @@ if __name__ == "__main__":
         metavar="checkpoint-dir",
         help="path to the checkpoint directory.",
         required=False,
-        default=Path(os.environ["SM_MODEL_DIR"])
+        default=Path(os.environ["SM_MODEL_DIR"]),
         type=Path,
     )
     parser.add_argument(
