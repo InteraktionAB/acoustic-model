@@ -285,7 +285,7 @@ if __name__ == "__main__":
         help="path to the data directory.",
         type=Path,
         required=False,
-        default=Path(os.environ["SM_CHANNEL_TRAINING"] + "/data")
+        default=Path(os.environ["SM_CHANNEL_TRAINING"])
     )
     parser.add_argument(
         "--checkpoint_dir",
@@ -314,3 +314,5 @@ if __name__ == "__main__":
         nprocs=world_size,
         join=True,
     )
+
+    print(os.listdir(os.environ["SM_CHANNEL_TRAINING"]))
