@@ -278,6 +278,7 @@ def train(rank, world_size, args):
 
 
 if __name__ == "__main__":
+    print(os.listdir(os.environ["SM_CHANNEL_TRAINING"]))
     parser = argparse.ArgumentParser(description="Train the acoustic model.")
     parser.add_argument(
         "--dataset_dir",
@@ -315,4 +316,4 @@ if __name__ == "__main__":
         join=True,
     )
 
-    print(os.listdir(os.environ["SM_CHANNEL_TRAINING"]))
+    
