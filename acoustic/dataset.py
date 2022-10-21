@@ -56,6 +56,8 @@ class MelDatasetOS(Dataset):
         pattern: str = train_dev_pattern.get(train)
 
         files: typing.List[str] = os.listdir(self.mels_dir)
+
+        print(files)
         self.metadata: typing.List[str] = list(
             itertools.starmap(os.path.join, zip([train_dev.get(train)] * len(files), files)))
 
