@@ -1,3 +1,4 @@
+import itertools
 import os
 import typing
 
@@ -10,6 +11,88 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
+
+
+class MelDatasetOS(Dataset):
+
+    """Fixed version for sagemaker
+
+    This version of the dataset differs from original version by the use of
+    pathlib.
+
+    Usage:
+        import acoustic
+
+        dataset: torch.data.Dataset = MelDataset(
+            root=os.environ["S3_CHANNEL_TRAINING"], train=True, discrete=False)
+    """
+
+    def __init__(self, root: str, train: bool=True, discrete=False):
+
+        """Constructs MelDatasetOS
+
+        Constructs the MelDatasetOS.
+
+        Arguments:
+            root: Parent directory
+            train: True if training
+            discrete: True if training for discete encoder
+
+        Returns:
+            None
+        """
+
+        self.root = root
+        self.train = train
+        self.discrete = discete
+
+        soft_discrete: typing.Dict = {"soft": True, "discrete": False}
+        train_dev_pattern: typing.Dict = {"train/*.npy": True, "dev/*.npy": False}
+        train_dev: typing.Dict = {"train": True, "dev": False}
+
+        self.mels_dir = os.path.join(root, "mels")
+        self.units_dir = os.path.join(root, soft_discrete.key(discete))
+
+        pattern: str = train_dev_pattern.key(train)
+
+        files: typing.List[str] = os.listdir(self.mels_dir)
+        self.metadata: typing.List[str] = list(
+            itertools.starmap(os.path.join, zip([train_dev.key(train)] * len(files), files)))
+
+    def __len__(self):
+        return len(self.metadata)
+
+    def __getitem__(self, index):
+        path = self.metadata[index]
+        mel_path = os.path.join(self.mels_dir, path)
+        units_path = os.path.join(self.units_dir, path)
+
+        mel = np.load(mel_path).T
+        units = np.load(units_path)
+
+        length = 2 * units.shape[0]
+
+        mel = torch.from_numpy(mel[:length, :])
+        mel = F.pad(mel, (0, 0, 1, 0))
+        units = torch.from_numpy(units)
+        if self.discrete:
+            units = units.long()
+        return mel, units
+
+    def pad_collate(self, batch):
+        mels, units = zip(*batch)
+
+        mels, units = list(mels), list(units)
+
+        mels_lengths = torch.tensor([x.size(0) - 1 for x in mels])
+        units_lengths = torch.tensor([x.size(0) for x in units])
+
+        mels = pad_sequence(mels, batch_first=True)
+        units = pad_sequence(
+            units, batch_first=True, padding_value=100 if self.discrete else 0
+        )
+
+        return mels, mels_lengths, units, units_lengths
 
 
 class MelDataset(Dataset):
