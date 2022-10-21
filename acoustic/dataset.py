@@ -55,7 +55,7 @@ class MelDatasetOS(Dataset):
 
         pattern: str = train_dev_pattern.get(train)
 
-        files: typing.List[str] = os.listdir(self.mels_dir)
+        files: typing.List[str] = os.listdir(os.path.join(self.mels_dir, train_dev.get(train)))
 
         print(files)
         self.metadata: typing.List[str] = list(
