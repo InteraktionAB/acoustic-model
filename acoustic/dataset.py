@@ -44,7 +44,7 @@ class MelDatasetOS(Dataset):
 
         self.root = root
         self.train = train
-        self.discrete = discete
+        self.discrete = discrete
 
         soft_discrete: typing.Dict = {"soft": True, "discrete": False}
         train_dev_pattern: typing.Dict = {"train/*.npy": True, "dev/*.npy": False}
