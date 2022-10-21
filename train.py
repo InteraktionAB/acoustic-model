@@ -14,7 +14,7 @@ import torch.multiprocessing as mp
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 from acoustic import AcousticModel
-from acoustic.dataset import MelDataset
+from acoustic.dataset import MelDataset, MelDatasetOS
 from acoustic.utils import Metric, save_checkpoint, load_checkpoint, plot_spectrogram
 
 
@@ -85,7 +85,7 @@ def train(rank, world_size, args):
     # Initialize datasets and dataloaders
     ####################################################################################
 
-    train_dataset = MelDataset(
+    train_dataset = MelDatasetOS(
         root=args.dataset_dir,
         train=True,
         discrete=args.discrete,
