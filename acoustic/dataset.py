@@ -46,18 +46,18 @@ class MelDatasetOS(Dataset):
         self.train = train
         self.discrete = discrete
 
-        soft_discrete: typing.Dict = {"soft": True, "discrete": False}
-        train_dev_pattern: typing.Dict = {"train/*.npy": True, "dev/*.npy": False}
-        train_dev: typing.Dict = {"train": True, "dev": False}
+        soft_discrete: typing.Dict = {True: "soft", False: "discrete"}
+        train_dev_pattern: typing.Dict = {True: "train/*.npy", False: "dev/*.npy"}
+        train_dev: typing.Dict = {True: "train", False: "dev"}
 
         self.mels_dir = os.path.join(root, "mels")
-        self.units_dir = os.path.join(root, soft_discrete.key(discete))
+        self.units_dir = os.path.join(root, soft_discrete.get(discete))
 
-        pattern: str = train_dev_pattern.key(train)
+        pattern: str = train_dev_pattern.get(train)
 
         files: typing.List[str] = os.listdir(self.mels_dir)
         self.metadata: typing.List[str] = list(
-            itertools.starmap(os.path.join, zip([train_dev.key(train)] * len(files), files)))
+            itertools.starmap(os.path.join, zip([train_dev.get(train)] * len(files), files)))
 
     def __len__(self):
         return len(self.metadata)
