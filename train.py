@@ -3,6 +3,7 @@ import logging
 import os
 from pathlib import Path
 
+import smdistributed.dataparallel.torch.torch_smddp
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
@@ -33,7 +34,7 @@ STEPS = 80000
 LOG_INTERVAL = 5
 VALIDATION_INTERVAL = 1000
 CHECKPOINT_INTERVAL = 1000
-BACKEND = "nccl"
+BACKEND = "smddp"
 INIT_METHOD = "tcp://localhost:54321"
 
 
