@@ -60,6 +60,7 @@ class MelDatasetOS(Dataset):
         print(files)
         self.metadata: typing.List[str] = list(
             itertools.starmap(os.path.join, zip([train_dev.get(train)] * len(files), files)))
+        print(self.metadata)
 
     def __len__(self):
         return len(self.metadata)
