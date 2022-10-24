@@ -39,8 +39,8 @@ INIT_METHOD = "tcp://localhost:54321"
 
 print(json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname'])
 
-os.environ["MASTER_ADDR"] = json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname']
-os.environ["MASTER_PORT"] = "12355"
+#os.environ["MASTER_ADDR"] = json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname']
+#os.environ["MASTER_PORT"] = "12355"
 
 
 def train(rank, world_size, args):
@@ -48,7 +48,7 @@ def train(rank, world_size, args):
         BACKEND,
         rank=rank,
         world_size=world_size,
-        init_method='env://',
+#        init_method='env://',
     )
 
     ####################################################################################
