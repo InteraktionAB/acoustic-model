@@ -46,7 +46,7 @@ def train(rank, world_size, args):
         BACKEND,
         rank=rank,
         world_size=world_size,
-        # init_method=INIT_METHOD,
+        init_method='env://',
     )
 
     ####################################################################################
