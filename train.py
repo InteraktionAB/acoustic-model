@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import os
 from pathlib import Path
@@ -36,7 +37,7 @@ CHECKPOINT_INTERVAL = 1000
 BACKEND = "nccl"
 INIT_METHOD = "tcp://localhost:54321"
 
-os.environ["MASTER_ADDR"] = "localhost"
+os.environ["MASTER_ADDR"] = json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname']
 os.environ["MASTER_PORT"] = "12355"
 
 
