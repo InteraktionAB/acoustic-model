@@ -37,6 +37,8 @@ CHECKPOINT_INTERVAL = 1000
 BACKEND = "nccl"
 INIT_METHOD = "tcp://localhost:54321"
 
+print(json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname'])
+
 os.environ["MASTER_ADDR"] = json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname']
 os.environ["MASTER_PORT"] = "12355"
 
