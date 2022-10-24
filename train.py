@@ -36,6 +36,9 @@ CHECKPOINT_INTERVAL = 1000
 BACKEND = "nccl"
 INIT_METHOD = "tcp://localhost:54321"
 
+os.environ["MASTER_ADDR"] = "localhost"
+os.environ["MASTER_PORT"] = "12355"
+
 
 def train(rank, world_size, args):
     dist.init_process_group(
