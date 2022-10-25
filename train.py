@@ -163,6 +163,7 @@ def train(rank, world_size, args):
     validation_loss = Metric()
 
     for epoch in range(start_epoch, n_epochs + 1):
+        print("Training in progress")
         train_sampler.set_epoch(epoch)
 
         acoustic.train()
