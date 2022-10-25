@@ -44,6 +44,7 @@ print(json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname'])
 
 
 def train(rank, world_size, args):
+    print(f"Rank: {rank}")
     dist.init_process_group(
         BACKEND,
         rank=rank,
