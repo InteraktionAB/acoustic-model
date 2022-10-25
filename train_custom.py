@@ -31,7 +31,7 @@ def train(
 
     arguments.initialize_distribution(
         backend=arguments.backend,
-        rank=arguments.rank,
+        rank=rank,
         world_size=arguments.world_size,
     )
 
