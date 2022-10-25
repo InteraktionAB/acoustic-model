@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
     arguments = parser.parse_args()
 
-    os.environ["WORLD_SIZE"] = str(arguments.hosts)
+    os.environ["WORLD_SIZE"] = str(len(arguments.hosts))
 
     arguments.initialize_distribution = torch.distributed.init_process_group
 
