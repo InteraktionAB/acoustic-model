@@ -44,7 +44,6 @@ print(json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname'])
 
 
 def train(rank, world_size, args):
-    print(f"Rank: {rank}")
     dist.init_process_group(
         BACKEND,
         rank=rank,
@@ -163,7 +162,6 @@ def train(rank, world_size, args):
     validation_loss = Metric()
 
     for epoch in range(start_epoch, n_epochs + 1):
-        print("Training in progress")
         train_sampler.set_epoch(epoch)
 
         acoustic.train()

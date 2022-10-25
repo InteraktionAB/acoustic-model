@@ -44,6 +44,7 @@ if __name__ == "__main__":
         type=str,
         help="Root of the dataset",
         required=True,
+        default=os.environ["SM_CHANNEL_TRAINING"],
     )
 
     parser.add_argument(
@@ -51,6 +52,7 @@ if __name__ == "__main__":
         type=str,
         help="Location to store checkpoint",
         required=True,
+        default=os.environ["SM_MODEL_DIR"],
     )
 
     parser.add_argument(
@@ -58,6 +60,7 @@ if __name__ == "__main__":
         type=list,
         help="List of hosts to use",
         required=True,
+        default=[0, 1, 2, 3],
     )
 
     arguments = parser.parse_args()
