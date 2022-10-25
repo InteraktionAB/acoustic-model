@@ -63,6 +63,14 @@ if __name__ == "__main__":
         default=[0, 1, 2, 3],
     )
 
+    parser.add_argument(
+        "--backend",
+        type=str,
+        help="Backend for distributed training"
+        required=False,
+        default="nccl"
+    )
+
     arguments = parser.parse_args()
 
     os.environ["WORLD_SIZE"] = str(arguments.hosts)
