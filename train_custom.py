@@ -81,4 +81,5 @@ if __name__ == "__main__":
         fn=train,
         args=(arguments,),
         nprocs=len(arguments.hosts),
+        join=True,
         )
