@@ -43,7 +43,7 @@ if __name__ == "__main__":
         "--dataset", 
         type=str,
         help="Root of the dataset",
-        required=True,
+        required=False,
         default=os.environ["SM_CHANNEL_TRAINING"],
     )
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
         "--checkpoint",
         type=str,
         help="Location to store checkpoint",
-        required=True,
+        required=False,
         default=os.environ["SM_MODEL_DIR"],
     )
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         "--hosts",
         type=list,
         help="List of hosts to use",
-        required=True,
+        required=False,
         default=[0, 1, 2, 3],
     )
 
