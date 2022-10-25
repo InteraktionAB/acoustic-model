@@ -66,7 +66,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--backend",
         type=str,
-        help="Backend for distributed training"
+        help="Backend for distributed training",
         required=False,
         default="nccl"
     )
