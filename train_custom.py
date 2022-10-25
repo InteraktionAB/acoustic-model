@@ -32,7 +32,6 @@ def train(
     arguments.initialize_distribution(
         backend=arguments.backend,
         rank=rank,
-        world_size=arguments.world_size,
     )
 
 if __name__ == "__main__":
