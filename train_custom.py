@@ -67,6 +67,8 @@ if __name__ == "__main__":
 
     os.environ["WORLD_SIZE"] = str(arguments.hosts)
 
+    arguments.initialize_distribution = torch.distributed.init_process_group
+
     torch.multiprocessing.spawn(
         fn=train,
         args=(arguments,),
