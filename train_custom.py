@@ -30,9 +30,7 @@ def train(
         None
     """
 
-    arguments.initialize_distribution(
-        backend=arguments.backend,
-    )
+    
 
 if __name__ == "__main__":
 
@@ -85,9 +83,8 @@ if __name__ == "__main__":
 
     arguments.initialize_distribution = torch.distributed.init_process_group
 
-    torch.multiprocessing.spawn(
-        fn=train,
-        args=(arguments,),
-        nprocs=len(arguments.hosts),
-        join=True,
-        )
+    arguments.initialize_distribution(
+        backend=arguments.backend,
+        rank=arguments.hosts.index(arguments.current_host),
+        world_size=str(len(arguments.host))
+    )
