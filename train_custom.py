@@ -86,5 +86,5 @@ if __name__ == "__main__":
     arguments.initialize_distribution(
         backend=arguments.backend,
         rank=arguments.hosts.index(arguments.current_host),
-        world_size=str(len(arguments.hosts))
+        world_size=len(arguments.hosts)
     )
