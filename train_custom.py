@@ -78,6 +78,9 @@ if __name__ == "__main__":
 
     arguments = parser.parse_args()
 
+    os.environ["MASTER_ADDR"] = "localhost"
+    os.environ["MASTER_PORT"] = "12355"
+
     os.environ["WORLD_SIZE"] = str(len(arguments.hosts))
     os.environ["RANK"] = str(arguments.hosts.index(arguments.current_host))
 
