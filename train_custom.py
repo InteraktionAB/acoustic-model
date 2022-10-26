@@ -7,6 +7,7 @@ Usage:
 """
 
 import argparse
+import json
 import os
 import typing
 
@@ -58,7 +59,7 @@ if __name__ == "__main__":
         type=list,
         help="List of hosts to use",
         required=False,
-        default=os.environ["SM_HOSTS"],
+        default=json.loads(os.environ["SM_HOSTS"]),
     )
 
     parser.add_argument(
