@@ -91,3 +91,5 @@ if __name__ == "__main__":
         rank=arguments.hosts.index(arguments.current_host),
         world_size=len(arguments.hosts)
     )
+
+    torch.distributed.destroy_process_group()
