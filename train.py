@@ -53,7 +53,9 @@ def find_free_port():
 #os.environ["MASTER_PORT"] = find_free_port()
 
 
-def train(rank, world_size, args):
+def train(args):
+    rank=0
+    world_size=4
     dist.init_process_group(
         BACKEND,
         rank=rank,
@@ -324,11 +326,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     world_size = torch.cuda.device_count()
-    mp.spawn(
-        train,
-        args=(world_size, args),
-        nprocs=world_size,
-        join=True,
-    )
+    # mp.spawn(
+    #     train,
+    #     args=(world_size, args),
+    #     nprocs=world_size,
+    #     join=True,
+    # )
+
+    train(args)
 
     
