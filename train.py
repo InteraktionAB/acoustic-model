@@ -35,7 +35,7 @@ LOG_INTERVAL = 5
 VALIDATION_INTERVAL = 1000
 CHECKPOINT_INTERVAL = 1000
 BACKEND = "nccl"
-INIT_METHOD = "tcp://localhost:54321"
+INIT_METHOD = "tcp://127.0.0.1:54321"
 
 print(json.loads(os.environ['SM_TRAINING_ENV'])['master_hostname'])
 
