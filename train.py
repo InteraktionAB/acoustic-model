@@ -49,8 +49,8 @@ def find_free_port():
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         return str(s.getsockname()[1])
 
-os.environ["MASTER_ADDR"] = "127.0.0.1"
-os.environ["MASTER_PORT"] = find_free_port()
+#os.environ["MASTER_ADDR"] = "127.0.0.1"
+#os.environ["MASTER_PORT"] = find_free_port()
 
 
 def train(rank, world_size, args):
@@ -58,7 +58,7 @@ def train(rank, world_size, args):
         BACKEND,
         rank=rank,
         world_size=world_size,
-#        init_method='env://',
+        init_method=INIT_METHOD,
     )
 
     ####################################################################################
