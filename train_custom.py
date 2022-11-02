@@ -11,6 +11,8 @@ import json
 import os
 import typing
 
+import torch.distributed as dist
+import torch.multiprocessing as mp
 import torch
 
 def train(
@@ -38,10 +40,10 @@ def train(
     os.environ["RANK"] = str(rank)
 
     # Initiate process
-    torch.utils.data.distributed.init_process_group(backend=args.backend, init_method="env://", rank=rank, world_size=world_size)
+    dist.init_process_group(backend=args.backend, init_method="env://", rank=rank, world_size=world_size)
     
     # Clean
-    torch.utils.data.distributed.destroy_process_group()
+    dist.destroy_process_group()
 
 
 if __name__ == "__main__":
@@ -65,4 +67,4 @@ if __name__ == "__main__":
     args.backend = "nccl" # Implicit setting backend
 
     # Start processes
-    torch.multiprocessing.spawn(train, nprocs=args.num_gpus, args=(args,))
+    mp.spawn(train, nprocs=args.num_gpus, args=(args,))
