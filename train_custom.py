@@ -14,8 +14,8 @@ import typing
 import torch
 
 def train(
-    rank: int, 
-    arguments: typing.Tuple
+    gpu: int, 
+    args: typing.Tuple
     ) -> None:
 
     """Train the model
@@ -23,83 +23,46 @@ def train(
     Train the model in multiple GPUs.
 
     Args:
-        rank: The id of the process.
-        arguments: Arguments to the funtion.
+        gpu: The id of the current gpu.
+        args: Arguments to the funtion.
 
     Returns:
         None
+
     """
+    world_size: int = len(args.hosts) * args.num_gpus # Total Num. GPUs
+    rank: int = args.hosts.index(args.current_host) * args.num_gpus + gpu # Current process is GPU ID in the current host
 
-def find_free_port():
-    """ https://stackoverflow.com/questions/1365265/on-localhost-how-do-i-pick-a-free-port-number """
-    import socket
-    from contextlib import closing
+    # Set them environ
+    os.environ["WORLD_SIZE"] = str(world_size)
+    os.environ["RANK"] = str(rank)
 
-    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
-        s.bind(('', 0))
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        return str(s.getsockname()[1])
-
+    # Initiate process
+    torch.utils.data.distributed.init_process_group(backend=args.backend, init_method="env://", rank=rank, world_size=world_size)
     
+    # Clean
+    torch.utils.data.distributed.destroy_process_group()
+
 
 if __name__ == "__main__":
 
     parser: argparse.ArgumentParser = argparse.ArgumentParser(__doc__)
 
-    parser.add_argument(
-        "--dataset", 
-        type=str,
-        help="Root of the dataset",
-        required=False,
-        default=os.environ["SM_CHANNEL_TRAINING"],
-    )
+    # Container arguments
+    parser.add_argument("--hosts", type=list, default=json.loads(os.environ["SM_HOSTS"])) # Instance count
+    parser.add_argument("--current_host", type=str, default=os.environ["SM_CURRENT_HOST"]) # Current instance
+    parser.add_argument("--num_gpus", type=int, default=os.environ["SM_NUM_GPUS"])
 
-    parser.add_argument(
-        "--checkpoint",
-        type=str,
-        help="Location to store checkpoint",
-        required=False,
-        default=os.environ["SM_MODEL_DIR"],
-    )
+    # Find master address
+    master_address: str = json.loads(os.environ["SM_TRAINING_ENV"])["master_hostname"]
 
-    parser.add_argument(
-        "--hosts",
-        type=list,
-        help="List of hosts to use",
-        required=False,
-        default=json.loads(os.environ["SM_HOSTS"]),
-    )
+    # Set master address, port for init_process_group
+    os.environ["MASTER_ADDR"] = master_address
+    os.environ["MASTER_PORT"] = "23456"
 
-    parser.add_argument(
-        "--backend",
-        type=str,
-        help="Backend for distributed training",
-        required=False,
-        default="nccl"
-    )
+    args = parser.parse_args()
 
-    parser.add_argument(
-        "--current_host",
-        type=str,
-        help="The current host",
-        required=False,
-        default=os.environ["SM_CURRENT_HOST"],
-    )
+    args.backend = "nccl" # Implicit setting backend
 
-    arguments = parser.parse_args()
-
-    os.environ["MASTER_ADDR"] = "127.0.0.1"
-    os.environ["MASTER_PORT"] = find_free_port()
-
-    os.environ["WORLD_SIZE"] = str(len(arguments.hosts))
-    os.environ["RANK"] = str(arguments.hosts.index(arguments.current_host))
-
-    arguments.initialize_distribution = torch.distributed.init_process_group
-
-    arguments.initialize_distribution(
-        backend=arguments.backend,
-        rank=arguments.hosts.index(arguments.current_host),
-        world_size=len(arguments.hosts)
-    )
-
-    torch.distributed.destroy_process_group()
+    # Start processes
+    torch.multiprocessing.spawn(train, nprocs=args.num_gpus, args=(args,))
