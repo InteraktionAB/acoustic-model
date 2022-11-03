@@ -21,7 +21,7 @@ import torch.multiprocessing as mp
 import torch
 
 from acoustic import AcousticModel
-from acoustic.dataset import MelDataset
+from acoustic.dataset import MelDatasetOS
 
 def train(
     gpu: int, 
@@ -63,7 +63,7 @@ def train(
     optimizer: torch.optim.Optimizer = torch.optim.AdamW(acoustic.parameters(), lr=args.lr, betas=args.betas, weight_decay=args.weight_decay,)
 
     # Train dataset
-    train_dataset: torch.nn.data.Dataset = MelDataset(root=args.dataset_dir, train=True, discrete=args.discrete)
+    train_dataset: torch.nn.data.Dataset = MelDatasetOS(root=args.dataset_dir, train=True, discrete=args.discrete)
 
     # Data sampler
     train_sampler: DistributedSampler = DistributedSampler(train_dataset, drop_last=True,)
