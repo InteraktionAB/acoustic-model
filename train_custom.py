@@ -16,6 +16,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
 import torch.nn.functional as F
 from torch.utils.data.distributed import DistributedSampler
+from torch.utils.data import DataLoader
 import torch.multiprocessing as mp
 import torch
 
@@ -68,7 +69,7 @@ def train(
     train_sampler: DistributedSampler = DistributedSampler(train_dataset, drop_last=True,)
 
     # Train data loader
-    train_loader = dataloader(
+    train_loader = DataLoader(
         train_dataset,
         batch_size=args.batch_size,
         sampler=train_sampler,
