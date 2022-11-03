@@ -109,15 +109,15 @@ def train(args):
         discrete=args.discrete,
     )
     train_sampler = DistributedSampler(train_dataset, drop_last=True)
-    train_loader = DataLoader(
+    train_loader = dataloader(
         train_dataset,
-        batch_size=BATCH_SIZE,
+        batch_size=batch_size,
         sampler=train_sampler,
         collate_fn=train_dataset.pad_collate,
         num_workers=8,
-        pin_memory=True,
-        shuffle=False,
-        drop_last=True,
+        pin_memory=true,
+        shuffle=false,
+        drop_last=true,
     )
 
     validation_dataset = MelDataset(
