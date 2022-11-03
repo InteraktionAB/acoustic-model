@@ -139,6 +139,7 @@ if __name__ == "__main__":
     args.weight_decay: float = 1e-5 # Implicit setting weight decay
     args.discrete: bool = False # Implicit setting discrete
     args.batch_size: int = 64 # Implicit batch setting
+    args.steps: int = 10 # Implicit setting of steps
 
     # Start processes
     mp.spawn(train, nprocs=args.num_gpus, args=(args,))
