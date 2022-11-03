@@ -20,7 +20,7 @@ import torch.multiprocessing as mp
 import torch
 
 from acoustic import AcousticModel
-from acoustic.dataset import MelDatasetOS
+from acoustic.dataset import MelDataset
 
 def train(
     gpu: int, 
