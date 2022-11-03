@@ -6,6 +6,7 @@ Usage:
     python -m train_custom
 """
 
+from pathlib import Path
 import argparse
 import json
 import os
@@ -119,7 +120,7 @@ if __name__ == "__main__":
         help="path to the data directory.",
         type=Path,
         required=False,
-        default=os.environ["SM_CHANNEL_TRAINING"]
+        default=os.environ["SM_CHANNEL_TRAINING"],
     )
 
     # Find master address
