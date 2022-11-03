@@ -56,7 +56,7 @@ def train(
     acoustic_model.to(gpu)
 
     # Set device id
-    acoustic: DDP = DDP(model, device_ids=[gpu])
+    acoustic: DDP = DDP(acoustic_model, device_ids=[gpu])
 
     # Optimizer
     optimizer: torch.optim.Optimizer = torch.optim.AdamW(acoustic.parameters(), lr=args.lr, betas=args.betas, weight_decay=args.weight_decay,)
