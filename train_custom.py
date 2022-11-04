@@ -138,7 +138,7 @@ if __name__ == "__main__":
     args.betas: tuple = (0.8, 0.99) # Implicit setting betas
     args.weight_decay: float = 1e-5 # Implicit setting weight decay
     args.discrete: bool = False # Implicit setting discrete
-    args.batch_size: int = 10 # Implicit batch setting
+    args.batch_size: int = 5 # Implicit batch setting
     args.steps: int = 10 # Implicit setting of steps
 
     # Start processes
