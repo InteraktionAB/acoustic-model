@@ -9,6 +9,7 @@ Usage:
 from pathlib import Path
 import argparse
 import json
+import logging
 import os
 import typing
 
@@ -101,6 +102,8 @@ def train(
             loss.backward()
             optimizer.step()
 
+        args.logger.info(f"loss: {loss}") 
+
     # Clean
     dist.destroy_process_group()
 
@@ -140,6 +143,11 @@ if __name__ == "__main__":
     args.discrete: bool = False # Implicit setting discrete
     args.batch_size: int = 5 # Implicit batch setting
     args.steps: int = 10 # Implicit setting of steps
+
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
+
+    args.logger = logger
 
     # Start processes
     mp.spawn(train, nprocs=args.num_gpus, args=(args,))
