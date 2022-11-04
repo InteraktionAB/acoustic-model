@@ -51,7 +51,7 @@ class MelDatasetOS(Dataset):
         train_dev: typing.Dict = {True: "train", False: "dev"}
 
         self.mels_dir = os.path.join(root, "mels")
-        self.units_dir = os.path.join(root, soft_discrete.get(discrete))
+        self.units_dir = os.path.join(root, soft_discrete.get(self.discrete))
 
         pattern: str = train_dev_pattern.get(train)
 
