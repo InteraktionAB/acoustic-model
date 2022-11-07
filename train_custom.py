@@ -54,6 +54,10 @@ def train(
     # Define the model
     acoustic_model: AcousticModel = AcousticModel()
 
+    # Encoder is not trained
+    for param in acoustic_model.encoder.parameters():
+        param.requires_grad = False
+
     # Set device
     acoustic_model.to(gpu)
 
