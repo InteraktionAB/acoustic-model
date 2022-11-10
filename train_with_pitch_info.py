@@ -61,7 +61,7 @@ def train(
 
     # Acoustic model with pitch
     acoustic_model_with_pitch: AcousticModelWithPitch = AcousticModelWithPitch(
-        acoustic_model=acoustic_model, linear_network=linear_network,)
+        acoustic_model, linear_network=linear_network,)
 
     # Set device
     acoustic_model_with_pitch.to(gpu)
