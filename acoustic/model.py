@@ -32,6 +32,7 @@ class LinearNetwork(nn.Module):
             None
 
         """
+        super().__init__()
         self.flatten = torch.nn.Flatten()
         self.linear_0: torch.nn.Linear = torch.nn.Linear(input_size * input_size, 50,)
         self.relu_0: torch.nn.ReLU = torch.nn.ReLU()
@@ -80,6 +81,7 @@ class AcousticModelWithPitch(nn.Module):
             None
 
         """
+        super().__init__()
         self.acoustic_model: AcousticModel = acoustic_model
         self.linear_network: LinearNetwork = linear_network
 
