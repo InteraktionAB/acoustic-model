@@ -7,6 +7,100 @@ URLS = {
     "hubert-soft": "https://github.com/bshall/acoustic-model/releases/download/v0.1/hubert-soft-0321fd7e.pt",
 }
 
+class LinearNetwork(nn.Module):
+    """A linear model for pitch
+
+    This linear model can be used to
+    condition decoder of the acoustic model
+    with pitch information.
+
+    Attributes:
+        flatten: A flatten layer.
+        linear_0: First Linear layer.
+
+    """
+    def __init__(self, input_size: int, output_size: int,) -> None:
+        """Constructs LinearNetwork
+
+        Constructs linear network with specified
+        arguments.
+
+        Arguments:
+            None
+
+        Returns:
+            None
+
+        """
+        self.flatten = torch.nn.Flatten()
+        self.linear_0: torch.nn.Linear = torch.nn.Linear(input_size * input_size, 50,)
+        self.relu_0: torch.nn.ReLU = torch.nn.ReLU()
+        self.linear_1: torch.nn.Linear = torch.nn.Linear(50, output_size)
+
+    def forward(self, pitch: torch.Tensor):
+        """Forward pass through LinearNetwork
+
+        Forward pass through LinearNetwork
+
+        Arguments:
+            pitch: Pitch input.
+
+        Returns:
+            A Tensor.
+
+        """
+        x: torch.Tensor = self.flatten(pitch)
+        x = self.linear_0(x)
+        x = self.relu_0(x)
+        x = self.linear_1(x)
+        return x
+
+class AcousticModelWithPitch(nn.Module):
+    """AcousticModel with pitch projection
+
+    This model augments AcousticModel with a
+    linear network that conditions the decoder
+    with pitch information.
+
+    Attributes:
+        acoustic_model: Original acoustic model instance
+        linear_network: Linear network connecting pitch to the decoder
+    
+    """
+    def __init__(acoustic_model: AcousticModel, linear_network: LinearNetwork) -> None:
+        """Construct PitchConditionedAcousticModel
+
+        Construct PitchConditionedAcousticModel
+
+        Args:
+            acoustic_model: The original acoustic model.
+            linear_network: The linear network.
+
+        Returns:
+            None
+
+        """
+        self.acoustic_model: AcousticModel = acoustic_model
+        self.linear_network: LinearNetwork = linear_network
+
+    def forward(self, pitch: torch.Tensor, content: torch.Tensor, mels: torch.Tensor) -> torch.Tensor:
+        """Forward pass
+
+        Forward pass through acoustic_model and linear_network.
+
+        Args:
+            pitch: Pitch for linear_network.
+            content: Encoded content.
+            mels: Mel-spectrogram data.
+
+        Returns:
+            A torch tensor.
+        """
+        linear_out: torch.Tensor = self.linear_network(pitch)
+        content_code: torch.Tensor = self.acoustic_model.encoder(content)
+        reconstruction: torch.Tensor = self.acoustic_model.decoder(linear_out + content_code, mels)
+        return reconstruction
+
 
 class AcousticModel(nn.Module):
     def __init__(self, discrete: bool = False, upsample: bool = True):

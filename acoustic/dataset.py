@@ -12,6 +12,104 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
 
+class MelAndPitchDataset(Dataset):
+    """Load pitch, mel data.
+
+    Extract pitch and mel data.
+
+    Attributes:
+        root: Data root.
+        train: Flag for training.
+        discrete: Unused.
+        mels_dir: Path to directory where spectrograms are stored.
+        units_dir: Path to directory where content units are stored.
+        wavs_dir: Path to directory where wav files are stored.
+        metadata: Tails.
+    """
+    def __init__(self, root: str, train: bool=True, discrete: bool=False) -> None:
+        """Constructs MelAndPitchDataset.
+
+        Construct the MelAndPitchDataset from root, train and bool.
+
+        Arguments:
+            root: Data root.
+            train: Train/eval flag.
+            discrete: Soft/discrete flag.
+        
+        Returns:
+            Return tuple of four tensors.
+        
+        """
+        self.root: str = root
+        self.train: bool = train
+        self.discrete: bool = discrete
+        self.mels_dir: str = os.path.join(self.root, "mels",)
+        self.units_dir: str = os.path.join(self.root, "units",)
+        self.wavs_dir: str = os.path.join(self.root, "wavs",)
+
+        train_dev_pattern_mels: typing.Dict = {True: "train/*.npy", False: "dev/*.npy"}
+        train_dev_pattern_units: typing.Dict = {True: "train/*.npy", False: "dev/*.npy"}
+        train_dev_pattern_wavs: typing.Dict = {True: "train/*.wav", False: "dev/*.wav"}
+        train_dev_mels: typing.Dict = {True: "train", False: "dev"}
+
+        pattern_mels: str = train_dev_pattern_mels[self.train]
+        pattern_units: str = train_dev_pattern_units[self.train]
+        pattern_wavs: str = train_dev_pattern_wavs[self.train]
+
+        files: typing.List[str] = os.listdir(os.path.join(self.mels_dir, train_dev_pattern_mels.split("/")[0]))
+        self.metadata: typing.List[str] = list(
+            itertools.starmap(os.path.join, zip(train_dev_mels.get(self.train) * len(files), files,)))
+
+    def __len__(self,):
+        """Get length of data.
+
+        Get the length of the dataset.
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        """
+        return len(self.metadata)
+
+    def __getitem__(self, index):
+        path = self.metadata[index]
+        mel_path = os.path.join(self.mels_dir, path)
+        units_path = os.path.join(self.units_dir, path)
+        wavs_path: str = os.path.join(self.wavs_dir, path)
+
+        mel = np.load(mel_path).T
+        units = np.load(units_path)
+        audio, sample_rate = torchaudio.load(wavs_path,)
+        pitch: torch.Tensor = torchaudio.functional.detect_pitch_frequency(audio, sample_rate,)
+
+        length = 2 * units.shape[0]
+
+        mel = torch.from_numpy(mel[:length, :])
+        mel = F.pad(mel, (0, 0, 1, 0))
+        units = torch.from_numpy(units)
+        if self.discrete:
+            units = units.long()
+        return mel, units, pitch
+
+    def pad_collate(self, batch):
+        mels, units, pitches = zip(*batch)
+
+        mels, units, pitches = list(mels), list(units), list(pitches)
+
+        mels_lengths = torch.tensor([x.size(0) - 1 for x in mels])
+        units_lengths = torch.tensor([x.size(0) for x in units])
+        pitches_lengths = torch.tensor([x.size(0) for x in pitches])
+
+        mels = pad_sequence(mels, batch_first=True)
+        units = pad_sequence(
+            units, batch_first=True, padding_value=100 if self.discrete else 0
+        )
+
+        return mels, mels_lengths, units, units_lengths, pitches, pitches_lengths
+
 
 class MelDatasetOS(Dataset):
 
