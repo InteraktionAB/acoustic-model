@@ -56,7 +56,7 @@ class MelAndPitchDataset(Dataset):
         pattern_units: str = train_dev_pattern_units[self.train]
         pattern_wavs: str = train_dev_pattern_wavs[self.train]
 
-        files: typing.List[str] = os.listdir(os.path.join(self.mels_dir, train_dev_pattern_mels.split("/")[0]))
+        files: typing.List[str] = os.listdir(os.path.join(self.mels_dir, train_dev_mels.get(self.train).split("/")[0]))
         self.metadata: typing.List[str] = list(
             itertools.starmap(os.path.join, zip(train_dev_mels.get(self.train) * len(files), files,)))
 
