@@ -68,7 +68,7 @@ class AcousticModelWithPitch(nn.Module):
         linear_network: Linear network connecting pitch to the decoder
     
     """
-    def __init__(acoustic_model, linear_network) -> None:
+    def __init__(self, acoustic_model, linear_network) -> None:
         """Construct PitchConditionedAcousticModel
 
         Construct PitchConditionedAcousticModel
