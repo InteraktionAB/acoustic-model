@@ -44,7 +44,7 @@ class MelAndPitchDataset(Dataset):
         self.train: bool = train
         self.discrete: bool = discrete
         self.mels_dir: str = os.path.join(self.root, "mels",)
-        self.units_dir: str = os.path.join(self.root, "units",)
+        self.units_dir: str = os.path.join(self.root, "soft",)
         self.wavs_dir: str = os.path.join(self.root, "wavs",)
 
         train_dev_pattern_mels: typing.Dict = {True: "train/*.npy", False: "dev/*.npy"}
