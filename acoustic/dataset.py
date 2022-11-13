@@ -58,7 +58,7 @@ class MelAndPitchDataset(Dataset):
 
         files: typing.List[str] = os.listdir(os.path.join(self.mels_dir, train_dev_mels.get(self.train)))
         self.metadata: typing.List[str] = list(
-            itertools.starmap(os.path.join, zip(train_dev_mels.get(self.train) * len(files), files,)))
+            itertools.starmap(os.path.join, zip([train_dev_mels.get(self.train)] * len(files), files,)))
 
     def __len__(self,):
         """Get length of data.
@@ -76,7 +76,6 @@ class MelAndPitchDataset(Dataset):
 
     def __getitem__(self, index):
         path = self.metadata[index]
-        print(self.mels_dir, path,)
         mel_path = os.path.join(self.mels_dir, path)
         units_path = os.path.join(self.units_dir, path)
         wavs_path: str = os.path.join(self.wavs_dir, path)
