@@ -76,6 +76,7 @@ class MelAndPitchDataset(Dataset):
 
     def __getitem__(self, index):
         path = self.metadata[index]
+        print(self.mels_dir, path,)
         mel_path = os.path.join(self.mels_dir, path)
         units_path = os.path.join(self.units_dir, path)
         wavs_path: str = os.path.join(self.wavs_dir, path)
