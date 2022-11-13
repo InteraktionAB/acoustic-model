@@ -11,6 +11,7 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
+import torchaudio
 
 class MelAndPitchDataset(Dataset):
     """Load pitch, mel data.
