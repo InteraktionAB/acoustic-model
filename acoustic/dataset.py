@@ -79,7 +79,7 @@ class MelAndPitchDataset(Dataset):
         path = self.metadata[index]
         mel_path = os.path.join(self.mels_dir, path)
         units_path = os.path.join(self.units_dir, path)
-        wavs_path: str = os.path.join(self.wavs_dir, path)
+        wavs_path: str = os.path.join(self.wavs_dir, f"{path.split(".")[0]}.wav")
 
         mel = np.load(mel_path).T
         units = np.load(units_path)
