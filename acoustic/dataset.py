@@ -109,6 +109,8 @@ class MelAndPitchDataset(Dataset):
             units, batch_first=True, padding_value=100 if self.discrete else 0
         )
 
+        pitches = pad_sequence(pitches, batch_first=True,)
+
         return mels, mels_lengths, units, units_lengths, pitches, pitches_lengths
 
 
