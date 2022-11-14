@@ -98,17 +98,16 @@ class MelAndPitchDataset(Dataset):
     def pad_collate(self, batch):
         mels, units, pitches = zip(*batch)
 
-        mels, units, pitches = list(mels), list(units), list(pitches)
+        mels, units, pitches_ = list(mels), list(units), list(pitches)
 
         mels_lengths = torch.tensor([x.size(0) - 1 for x in mels])
         units_lengths = torch.tensor([x.size(0) for x in units])
-        pitches_lengths = torch.tensor([x.size(0) for x in pitches])
+        pitches_lengths = torch.tensor([x.size(0) for x in pitches_])
 
         mels = pad_sequence(mels, batch_first=True)
         units = pad_sequence(
             units, batch_first=True, padding_value=100 if self.discrete else 0
         )
-        pitches = pad_sequence(pitches, batch_first=True,)
 
         return mels, mels_lengths, units, units_lengths, pitches, pitches_lengths
 
