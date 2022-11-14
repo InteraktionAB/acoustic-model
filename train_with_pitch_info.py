@@ -54,7 +54,7 @@ def train(
     dist.init_process_group(backend=args.backend, init_method="env://", rank=rank, world_size=world_size)
 
     # Linear network
-    linear_network: LinearNetwork = LinearNetwork(input_size=16178, output_size=128,)
+    linear_network: LinearNetwork = LinearNetwork(input_size=16178, output_size=512,)
 
     # Define the model
     acoustic_model: AcousticModel = AcousticModel()
