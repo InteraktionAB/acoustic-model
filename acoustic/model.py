@@ -100,7 +100,7 @@ class AcousticModelWithPitch(nn.Module):
         """
         linear_out: torch.Tensor = self.linear_network(pitch)
         content_code: torch.Tensor = self.acoustic_model.encoder(content)
-        reconstruction: torch.Tensor = self.acoustic_model.decoder(linear_out + content_code, mels)
+        reconstruction: torch.Tensor = self.acoustic_model.decoder(linear_out.T + content_code, mels)
         return reconstruction
 
 
