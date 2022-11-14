@@ -99,6 +99,7 @@ class AcousticModelWithPitch(nn.Module):
         Returns:
             A torch tensor.
         """
+        print(pitch.shape)
         linear_out: torch.Tensor = self.linear_network(pitch)
         content_code: torch.Tensor = self.acoustic_model.encoder(content)
         print(linear_out.shape, content_code.shape)
