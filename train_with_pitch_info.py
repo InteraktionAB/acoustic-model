@@ -103,7 +103,7 @@ def train(
 
             optimizer.zero_grad()
 
-            mels_ = acoustic_model(pitches, units, mels[:, :-1, :])
+            mels_ = acoustic_model_with_pitch(pitches, units, mels[:, :-1, :])
 
             loss = F.l1_loss(mels_, mels[:, 1:, :], reduction="none")
             loss = torch.sum(loss, dim=(1, 2)) / (mels_.size(-1) * mels_lengths)
