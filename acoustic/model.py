@@ -51,7 +51,7 @@ class LinearNetwork(nn.Module):
 
         """
         #x: torch.Tensor = self.flatten(pitch.T)
-        x = self.linear_0(pitch.T)
+        x = self.linear_0(pitch)
         x = self.relu_0(x)
         x = self.linear_1(x)
         return x
