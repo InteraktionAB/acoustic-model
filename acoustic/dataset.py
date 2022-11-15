@@ -93,6 +93,7 @@ class MelAndPitchDataset(Dataset):
         units = torch.from_numpy(units)
         if self.discrete:
             units = units.long()
+        print(mel.shape, units.shape, pitch.shape)
         return mel, units, pitch.T
 
     def pad_collate(self, batch):
