@@ -97,3 +97,19 @@ def plot_spectrogram(spectrogram):
     plt.close()
 
     return fig
+
+def extract_pitch(y, sr, hop_length, fmin, fmax):
+    """
+    Conduct pitch tracking. Return normalized pitch (0.0 ~ 1.0) and pitch mask where 1.0 corresponds to
+    valid pitches and 0.0 corresponds to invalid pitches. 
+    """
+    y = y.numpy()
+    pitches, _ = librosa.piptrack(y, sr=sr, hop_length=hop_length, fmin=fmin, fmax=fmax)
+    pitches[pitches == 0.0] = np.nan
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        pitches = np.nanmin(pitches, axis=0)
+    pitches[np.isnan(pitches)] = 0.0  # All-nan columns result in nan pitch. Use 0.0 for these values.
+    pitch_mask = np.where(pitches > 0.0, 1.0, 0.0)
+    normalized_pitches = np.clip((pitches - PITCH_FMIN) / (PITCH_FMAX - PITCH_FMIN), 0.0, 1.0)
+    return normalized_pitches, pitch_mask
