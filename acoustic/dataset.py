@@ -94,7 +94,7 @@ class MelAndPitchDataset(Dataset):
         if self.discrete:
             units = units.long()
         print(mel.shape, units.shape, pitch.shape)
-        return mel, units, pitch
+        return mel, units, pitch.T
 
     def pad_collate(self, batch):
         mels, units, pitches = zip(*batch)
@@ -110,7 +110,7 @@ class MelAndPitchDataset(Dataset):
             units, batch_first=True, padding_value=100 if self.discrete else 0
         )
 
-        pitches = pad_sequence(pitches.T, batch_first=True,)
+        pitches = pad_sequence(pitches, batch_first=True,)
 
         return mels, mels_lengths, units, units_lengths, pitches, pitches_lengths
 
