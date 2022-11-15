@@ -112,7 +112,7 @@ class MelAndPitchDataset(Dataset):
 
         pitches = pad_sequence(pitches.T, batch_first=True,)
 
-        return mels, mels_lengths, units, units_lengths, pitches.T, pitches_lengths
+        return mels, mels_lengths, units, units_lengths, pitches, pitches_lengths
 
 
 class MelDatasetOS(Dataset):

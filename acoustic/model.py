@@ -33,7 +33,7 @@ class LinearNetwork(nn.Module):
 
         """
         super().__init__()
-        self.flatten = torch.nn.Flatten()
+        #self.flatten = torch.nn.Flatten()
         self.linear_0: torch.nn.Linear = torch.nn.Linear(input_size, 50,)
         self.relu_0: torch.nn.ReLU = torch.nn.ReLU()
         self.linear_1: torch.nn.Linear = torch.nn.Linear(50, output_size)
@@ -50,9 +50,9 @@ class LinearNetwork(nn.Module):
             A Tensor.
 
         """
-        x: torch.Tensor = self.flatten(pitch)
+        #x: torch.Tensor = self.flatten(pitch.T)
         print(x.shape)
-        x = self.linear_0(x)
+        x = self.linear_0(pitch.T)
         x = self.relu_0(x)
         x = self.linear_1(x)
         return x
