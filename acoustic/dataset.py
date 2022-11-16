@@ -13,6 +13,8 @@ from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
 import torchaudio
 
+from acoustic.utils import extract_pitch
+
 class MelAndPitchDataset(Dataset):
     """Load pitch, mel data.
 
@@ -84,7 +86,8 @@ class MelAndPitchDataset(Dataset):
         mel = np.load(mel_path).T
         units = np.load(units_path)
         audio, sample_rate = torchaudio.load(wavs_path,)
-        pitch: torch.Tensor = torchaudio.functional.detect_pitch_frequency(audio, sample_rate,)
+        #pitch: torch.Tensor = torchaudio.functional.detect_pitch_frequency(audio, sample_rate,)
+        pitch: torch.Tensor = extract_pitch(audio, sample_rate, 100, 48, 1568)
 
         length = 2 * units.shape[0]
 
