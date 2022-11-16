@@ -113,4 +113,4 @@ def extract_pitch(y, sr, hop_length, fmin, fmax):
     pitch_mask = np.where(pitches > 0.0, 1.0, 0.0)
     normalized_pitches = np.clip((pitches - PITCH_FMIN) / (PITCH_FMAX - PITCH_FMIN), 0.0, 1.0)
     normalized_pitches = torch.from_numpy(normalized_pitches)
-    return normalized_pitches, pitch_mask
+    return normalized_pitches
